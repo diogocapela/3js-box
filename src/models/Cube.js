@@ -6,6 +6,7 @@ function MODELCube({
   heightSegments = 1,
   depthSegments = 1,
   texture,
+  color,
 }) {
   const geometry = new THREE.BoxGeometry(
     width,
@@ -26,6 +27,7 @@ function MODELCube({
 
   const material = new THREE.MeshBasicMaterial({
     map: loadedTexture,
+    color: color || null,
   });
 
   const cube = new THREE.Mesh(geometry, material);

@@ -38,7 +38,8 @@ function init() {
     0.1, // near
     1000 // far
   );
-  camera.position.set(0, 500, 1000);
+  camera.position.set(0, 500, 500);
+  // camera.position.set(0, 0, 0);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setClearColor('tomato');
@@ -46,23 +47,24 @@ function init() {
 
   document.body.appendChild(renderer.domElement);
 
-  const productionLine = buildProductionLine({
-    comprimento: GLOBALS.productionLine.comprimento,
-    largura: GLOBALS.productionLine.largura,
-  });
-  PRODUCTION_LINES.push(productionLine);
-  PRODUCTION_LINES.forEach(pL => {
-    scene.add(pL);
-  });
+  // Dinamically generate production lines
+  // ===================================================================
+  $.get('https://pokeapi.co/api/v2/pokedex', data => {
+    const productionLines = data.results || [];
+    for (let i = 0; i < productionLines.length; i++) {
+      const pl = buildProductionLine({
+        comprimento: GLOBALS.productionLine.comprimento,
+        largura: GLOBALS.productionLine.largura,
+        text: `PL ${i + 1}`,
+      });
 
-  const product = buildProduct();
-  PRODUCTS.push(product);
-  PRODUCTS.forEach(p => {
-    p.position.set(GLOBALS.productionLine.largura / 2, 10, -10);
-    setTimeout(() => {
-      scene.remove(p);
-    }, 10000);
-    scene.add(p);
+      pl.position.set(GLOBALS.productionLine.largura * i, 0, 0);
+      PRODUCTION_LINES.push(pl);
+    }
+
+    PRODUCTION_LINES.forEach(pL => {
+      scene.add(pL);
+    });
   });
 }
 
@@ -70,7 +72,7 @@ function animate() {
   requestAnimationFrame(animate);
 
   PRODUCTS.forEach(p => {
-    p.position.z += 0.1;
+    p.position.z += 1;
   });
 
   renderer.render(scene, camera);

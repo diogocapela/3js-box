@@ -1,6 +1,7 @@
-function buildProductionLine({ largura, comprimento }) {
+function buildProductionLine({ largura, comprimento, text } = {}) {
   this.largura = largura;
   this.comprimento = comprimento;
+  this.text = text;
 
   const productionLine = new THREE.Group();
 
@@ -53,14 +54,14 @@ function buildProductionLine({ largura, comprimento }) {
   const loader = new THREE.FontLoader();
 
   loader.load(`assets/fonts/gentilis_bold.typeface.json`, result => {
-    const text = new MODELText({
+    const textModel = new MODELText({
       font: result,
-      content: 'PL 01',
+      content: text,
     });
-    text.rotation.y = Math.PI;
-    text.position.set(this.largura, 25, this.comprimento);
+    textModel.rotation.y = Math.PI;
+    textModel.position.set(this.largura, 25, this.comprimento);
 
-    productionLine.add(text);
+    productionLine.add(textModel);
   });
 
   productionLine.add(ground);
